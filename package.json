@@ -1,0 +1,96 @@
+{
+  "name": "reactify-markdown",
+  "version": "0.1.0",
+  "description": "Markdown-It plugin that overwrites the renderer to produce React nodes rather than HTML text",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "build": "npm run build:prod && npm run build:dev",
+    "build:prod": "npx cross-env NODE_ENV=production webpack --mode production",
+    "build:dev": "npx cross-env NODE_ENV=development webpack --mode development",
+    "test": "jest"
+  },
+  "keywords": [
+    "React",
+    "markdown",
+    "markdown-it"
+  ],
+  "author": "Jordan Hitch",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dfoverdx/reactify-markdown.git"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@types/babel-core": "^6.25.5",
+    "@types/classnames": "^2.2.6",
+    "@types/clean-webpack-plugin": "^0.1.2",
+    "@types/enzyme": "^3.1.15",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/enzyme-to-json": "^1.5.2",
+    "@types/jest": "^23.3.10",
+    "@types/markdown-it": "0.0.7",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
+    "@types/react-test-renderer": "^16.0.3",
+    "@types/shortid": "0.0.29",
+    "@types/strip-indent": "^2.0.0",
+    "@types/typescript": "^2.0.0",
+    "@types/webpack": "^4.4.22",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "classnames": "^2.2.6",
+    "clean-webpack-plugin": "^1.0.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "enzyme-to-json": "^3.3.5",
+    "esm": "^3.0.84",
+    "jest": "^23.6.0",
+    "markdown-it": "^8.4.2",
+    "markdown-it-regex": "^0.2.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-test-renderer": "^16.7.0",
+    "regenerator-runtime": "^0.13.1",
+    "shortid": "^2.2.14",
+    "source-map-loader": "^0.2.4",
+    "strip-indent": "^2.0.0",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2"
+  },
+  "peerDependencies": {
+    "markdown-it": "^8.4.2",
+    "react": "^16.7.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "node"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "setupFiles": [
+      "./test/setup-enzyme.ts"
+    ],
+    "coverageReporters": [ "text-summary" ],
+    "collectCoverage": true
+  }
+}

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`It doesn't strip whitespace when it's set not to 1`] = `
+<pre
+  key="someshortid-0"
+>
+  <code>
+    Header 1
+========
+
+A paragraph starts here.  *This is italicized.*
+
+  </code>
+</pre>
+`;
+
+exports[`It handles custom rules 1`] = `
+<p
+  key="someshortid-0"
+>
+  Hay 
+  <i
+    key="someshortid-1"
+  >
+    needle
+  </i>
+   stack
+</p>
+`;
+
+exports[`It handles some basic rules 1`] = `
+Array [
+  <h1
+    key="someshortid-0"
+  >
+    Header 1
+  </h1>,
+  <p
+    key="someshortid-3"
+  >
+    A paragraph starts here.  
+    <em
+      key="someshortid-1"
+    >
+      This is italicized.
+    </em>
+  </p>,
+  <pre
+    key="someshortid-2"
+  >
+    <code>
+      This is a code block.
+
+    </code>
+  </pre>,
+]
+`;
