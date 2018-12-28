@@ -126,7 +126,7 @@ const myRule = [
 ];
 
 ReactDOM.render(
-    <ReactifyMarkdown plugins={myRule}>Hay :needle: stack</ReactifyMarkdown>,
+    <ReactifyMarkdown plugins={[myRule]}>Hay :needle: stack</ReactifyMarkdown>,
     document.getElementById('root')
 );
 ```
