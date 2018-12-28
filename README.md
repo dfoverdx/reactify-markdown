@@ -105,7 +105,6 @@ ReactDOM.render(
     </ReactifyMarkdown>,
     document.getElementById('root')
 );
-}
 ```
 
 #### With a custom rule ####
