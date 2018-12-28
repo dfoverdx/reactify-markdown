@@ -87,7 +87,9 @@ ReactDOM.render(
 Produces:
 
 ```html
-Hay <i>needle</i> stack
+<p>
+    Hay <i>needle</i> stack
+</p>
 ```
 
 ### Using the React Component ###
