@@ -27,18 +27,6 @@ export default class ReactRenderer {
      * @param options Options passed to Renderer rules.
      * @param env Environment passed to Renderee rules.
      */
-    render(tokens: Token[], options: any, env: any): ReactNode;
-    
-    /**
-     * Renders the passed MarkdownIt tokens.
-     * 
-     * @deprecated Use JSX Rendered tokens instead, as their `content` property can store React components.
-     */
-    render(tokens: MDIToken[], options: any, env: any): string;
-
-    /**
-     * Render implementation.
-     */
     render(tokens: Token[], options: any, env: any): ReactNode {
         const keyPrefix = shortid();
         return this.renderInner(tokens, keyPrefix, 0, options, env)[0];

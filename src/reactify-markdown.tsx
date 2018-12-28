@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import MD from 'markdown-it';
 import { Options } from 'markdown-it/lib/index';
 import stripIndent from 'strip-indent';
-import { ReactRenderer, RenderReactPlugin } from './index';
+import RenderReactPlugin from './react-renderer-plugin';
 import { Plugin } from './types';
 
 interface BaseProps {

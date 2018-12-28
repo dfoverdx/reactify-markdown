@@ -1,7 +1,12 @@
 import { ReactNode } from 'react';
 import MarkdownIt from 'markdown-it';
 import MDIToken from 'markdown-it/lib/token';
-import ReactRenderer from './react-renderer';
+declare class ReactRenderer {
+    rules: {
+        [key: string]: TokenRender;
+    };
+    render(tokens: Token[], options: any, env: any): ReactNode;
+}
 declare type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 /**
  * A MarkdownIt Token with the overloaded capacity to allow the `content` property to be a `ReactNkde`.

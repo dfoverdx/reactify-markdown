@@ -1,7 +1,16 @@
 import { ReactNode } from 'react';
 import MarkdownIt from 'markdown-it';
 import MDIToken from 'markdown-it/lib/token';
-import ReactRenderer from './react-renderer';
+
+// import ReactRenderer from './react-renderer';
+
+declare class ReactRenderer {
+    rules: {
+        [key: string]: TokenRender;
+    };
+
+    render(tokens: Token[], options: any, env: any): ReactNode;
+};
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 

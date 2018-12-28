@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin';
 
 export default function genConfig(_, options) {
     const NODE_ENV = (options.mode || process.env.NODE_ENV || 'production').trim(),
@@ -15,6 +16,8 @@ export default function genConfig(_, options) {
         output: {
             filename: '[name].js',
             path: path.resolve(__dirname, isDev ? 'dev-dist' : 'dist'),
+            library: 'reactify-markdown',
+            libraryTarget: 'commonjs2',
         },
 
         optimization: {
@@ -35,13 +38,13 @@ export default function genConfig(_, options) {
             rules: [
                 {
                     test: /\.jsx?$/,
-                    exclude: /node_modules/,
+                    exclude: /node_modules|__tests__/,
                     loader: 'babel-loader'
                 },
                 {
                     test: /\.tsx?$/,
-                    exclude: /node_modules/,
-                    loader: 'awesome-typescript-loader'
+                    exclude: /node_modules|__tests__/,
+                    loader: 'ts-loader'
                 },
                 {
                     enforce: 'pre', 
@@ -64,6 +67,7 @@ export default function genConfig(_, options) {
     
     addPlugins([
         isProd && new CleanWebpackPlugin(['dist']),
+        new DuplicatePackageCheckerPlugin(),
     ]);
     
     return webpackConfig;

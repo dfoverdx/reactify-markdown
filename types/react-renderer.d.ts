@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import MDIToken from 'markdown-it/lib/token';
 import { Token, TokenRender } from './types';
 /**
  * Renderer that renders the converted source as React elements rather than an HTML string.
@@ -20,12 +19,6 @@ export default class ReactRenderer {
      * @param env Environment passed to Renderee rules.
      */
     render(tokens: Token[], options: any, env: any): ReactNode;
-    /**
-     * Renders the passed MarkdownIt tokens.
-     *
-     * @deprecated Use JSX Rendered tokens instead, as their `content` property can store React components.
-     */
-    render(tokens: MDIToken[], options: any, env: any): string;
     /**
      * Does the woek of rendering.  Is in a separate function from `render` so that we can include the `idx` argument.
      *
