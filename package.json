@@ -1,6 +1,6 @@
 {
   "name": "reactify-markdown",
-  "version": "0.1.3",
+  "version": "0.1.7",
   "description": "Markdown-It plugin that overwrites the renderer to produce React nodes rather than HTML text",
   "main": "./dist/index.js",
   "types": "./types",
@@ -13,7 +13,7 @@
     "build:dev": "npx cross-env NODE_ENV=development webpack --mode development",
     "build:watch": "nodemon -w webpack.config.babel.js ./node_modules/webpack/bin/webpack.js --mode production --watch",
     "test": "jest",
-    "publish": "npm version from-git && npm run build:prod && npm publish"
+    "dopublish": "npm version from-git && npm run build:prod && npm publish"
   },
   "keywords": [
     "React",
