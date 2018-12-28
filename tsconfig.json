@@ -15,7 +15,8 @@
         "allowSyntheticDefaultImports": true,
         "downlevelIteration": true,
         "sourceMap": true,
-        "declaration": true
+        "declaration": true,
+        "declarationDir": "./types"
     },
     "include": [
         "./src/**/*.ts",
