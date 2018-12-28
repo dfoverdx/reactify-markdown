@@ -102,9 +102,12 @@ import ReactDOM from 'react-dom';
 import ReactifyMarkdown from 'reactify-markdown';
 
 ReactDOM.render(
-    <ReactifyMarkdown>
-        # Hello #
-    </ReactifyMarkdown>,
+    <div>
+        Here's my markdown!
+        <ReactifyMarkdown>
+            # Hello #
+        </ReactifyMarkdown>
+    </div>,
     document.getElementById('root')
 );
 ```
