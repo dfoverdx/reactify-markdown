@@ -1,6 +1,6 @@
 {
   "name": "reactify-markdown",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Markdown-It plugin that overwrites the renderer to produce React nodes rather than HTML text",
   "main": "./dist/index.js",
   "types": "./types",
