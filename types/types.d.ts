@@ -26,5 +26,5 @@ export declare type TokenRender = (tokens: Token[], idx: number, options: any, e
 export interface MarkdownItRules {
     [key: string]: TokenRender;
 }
-export declare type Plugin = [(md: MarkdownIt, env: any) => void, ...any[]];
+export declare type Plugin = [(md: MarkdownIt, env: any) => void, ...any[]] | ((md: MarkdownIt, env: any) => void);
 export {};

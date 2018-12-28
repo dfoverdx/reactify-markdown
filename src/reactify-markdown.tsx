@@ -55,7 +55,7 @@ interface OptionsProps extends BaseProps {
      * 
      * @warning Any plugin which overwrites the instance's renderer directly will cause an error.
      */
-    plugins?: Plugin[];
+    plugins?: Plugin[] | Plugin;
 
     /**
      * The preset name to use.
@@ -181,8 +181,12 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
             const renderer = md.renderer;
 
             if (plugins) {
+                if (!Array.isArray(plugins)) {
+                    plugins = [plugins];
+                }
+                
                 plugins.forEach((p, i) => {
-                    md.use(...p);
+                    md.use.call(md, ...p);
                     if (md.renderer !== renderer) {
                         if (p.constructor.name !== 'Function') {
                             throw new Error(`Plugin ${p.constructor.name} overwrote the renderer.`);

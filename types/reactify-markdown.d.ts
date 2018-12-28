@@ -45,7 +45,7 @@ interface OptionsProps extends BaseProps {
      *
      * @warning Any plugin which overwrites the instance's renderer directly will cause an error.
      */
-    plugins?: Plugin[];
+    plugins?: Plugin[] | Plugin;
     /**
      * The preset name to use.
      *

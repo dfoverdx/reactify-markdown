@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import MDIToken from 'markdown-it/lib/token';
 import shortid from 'shortid';
 import default_rules from './default-rules';
 import { getAttrs } from './helpers';

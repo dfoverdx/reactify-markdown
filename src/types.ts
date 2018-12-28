@@ -35,4 +35,4 @@ export interface MarkdownItRules {
     [key: string]: TokenRender;
 }
 
-export type Plugin = [(md: MarkdownIt, env: any) => void, ...any[]];
+export type Plugin = [(md: MarkdownIt, env: any) => void, ...any[]] | ((md: MarkdownIt, env: any) => void);
