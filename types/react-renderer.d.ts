@@ -23,7 +23,6 @@ export default class ReactRenderer {
      * Does the woek of rendering.  Is in a separate function from `render` so that we can include the `idx` argument.
      *
      * @param tokens The token stream produced by the parser.
-     * @param keyPrefix A prefix for element keys.
      * @param idx The index of the starting token to be rendered.  Is `0` when called by `render`, and greater when
      * being called recursively.
      * @param options Options passed to the Renderer instance.
