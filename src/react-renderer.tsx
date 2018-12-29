@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import shortid from 'shortid';
 import default_rules from './default-rules';
 import { getAttrs } from './helpers';
 import { Token, TokenRender } from './types';
@@ -27,21 +26,19 @@ export default class ReactRenderer {
      * @param env Environment passed to Renderee rules.
      */
     render(tokens: Token[], options: any, env: any): ReactNode {
-        const keyPrefix = shortid();
-        return this.renderInner(tokens, keyPrefix, 0, options, env)[0];
+        return this.renderInner(tokens, 0, options, env)[0];
     }
 
     /**
      * Does the woek of rendering.  Is in a separate function from `render` so that we can include the `idx` argument.
      * 
      * @param tokens The token stream produced by the parser.
-     * @param keyPrefix A prefix for element keys.
      * @param idx The index of the starting token to be rendered.  Is `0` when called by `render`, and greater when
      * being called recursively.
      * @param options Options passed to the Renderer instance.
      * @param env Environement passed to the Renderer instance.
      */
-    private renderInner(tokens: Token[], keyPrefix: string, idx: number, options: any, env: any): [ReactNode, number] {
+    private renderInner(tokens: Token[], idx: number, options: any, env: any): [ReactNode, number] {
         let rules = this.rules,
             nodes: ReactNode[] = [];
 
@@ -50,23 +47,23 @@ export default class ReactRenderer {
                 type = token.type;
 
             if (type === 'inline') {
-                addNodeToArray(nodes, this.render(token.children, options, env), keyPrefix);
+                addNodeToArray(nodes, this.render(token.children, options, env));
             } else if (rules[type] !== undefined) {
                 let n = rules[type](tokens, i, options, env, this);
-                addNodeToArray(nodes, n, keyPrefix);
+                addNodeToArray(nodes, n);
             } else if (token.hidden) {
                 continue;
             } else if (token.nesting === 1) {
                 // opening tag which may or may not be followed by children
                 let Tag = token.tag,
-                    [n, j] = this.renderInner(tokens, keyPrefix, i + 1, options, env);
+                    [n, j] = this.renderInner(tokens, i + 1, options, env);
                 
-                addNodeToArray(nodes, <Tag key={`${keyPrefix}-${i}`} {...getAttrs(token)}>{n}</Tag>, keyPrefix);
+                addNodeToArray(nodes, <Tag key={i} {...getAttrs(token)}>{n}</Tag>);
                 i = j;
             } else if (token.nesting === 0) {
                 // singleton tag, e.g. <img />
                 let Tag = token.tag;
-                addNodeToArray(nodes, <Tag key={`${keyPrefix}-${i}`} {...getAttrs(token)} />, keyPrefix);
+                addNodeToArray(nodes, <Tag key={i} {...getAttrs(token)} />);
             } else {
                 // closing tag -- return at this point as it's either the last token in the stream, or it's the final
                 // action of a recursive call
@@ -84,9 +81,8 @@ export default class ReactRenderer {
  * 
  * @param array The array to which the node should be appended.
  * @param node The `ReactNode` to be appended.
- * @param keyPrefix The prefix for element keys.
  */
-function addNodeToArray(array: ReactNode[], node: ReactNode, keyPrefix: string): void {
+function addNodeToArray(array: ReactNode[], node: ReactNode): void {
     let idx = array.length;
     if (node === null || node === undefined || typeof node === 'boolean') {
         return;
@@ -94,7 +90,7 @@ function addNodeToArray(array: ReactNode[], node: ReactNode, keyPrefix: string):
 
     if (Array.isArray(node)) {
         for (let n of node) {
-            addNodeToArray(array, n,  keyPrefix);
+            addNodeToArray(array, n);
         }
         idx = array.length;
     } else if (React.isValidElement(node)) {
@@ -102,7 +98,7 @@ function addNodeToArray(array: ReactNode[], node: ReactNode, keyPrefix: string):
             // assume the user knows what they're doing
             array.push(node);
         } else {
-            array.push(React.cloneElement(node, { key: `${keyPrefix}-${idx++}` }));
+            array.push(React.cloneElement(node, { key: idx++ }));
         }
     } else {
         array.push(node);
