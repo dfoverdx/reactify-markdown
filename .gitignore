@@ -1,6 +1,5 @@
 node_modules
 *.code-workspace
-import-sorter.config.json
 /coverage
 /.vscode
 /dist

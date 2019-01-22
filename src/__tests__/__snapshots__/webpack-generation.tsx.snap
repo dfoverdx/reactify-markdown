@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`It loads the ReactifyMarkdown export 1`] = `
+<p
+  key="0"
+>
+  Test
+</p>
+`;

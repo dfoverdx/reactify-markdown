@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import classnames from 'classnames';
 import { escapeHtml, unescapeAll } from 'markdown-it/lib/common/utils';
 import { getAttrs } from './helpers';
@@ -88,9 +88,15 @@ default_rules.image = function(tokens, idx, options, env, slf) {
 }
 
 /**
- * Hard-break/soft-break `<br />` rule.
+ * Hard-break `<br />` rule.
  */
-default_rules.hardbreak = default_rules.softbreak = () => <br />;
+default_rules.hardbreak = () => <Fragment><br />{'\n'}</Fragment>;
+
+/**
+ * Soft-break `<br />` rule.
+ */
+default_rules.softbreak = (_, _1, options) => 
+    options.breaks ? <Fragment><br />{'\n'}</Fragment> : '\n';
 
 /**
  * Unformatted text, html block, and html inline rules.

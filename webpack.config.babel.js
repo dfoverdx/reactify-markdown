@@ -1,7 +1,7 @@
-import webpack from 'webpack';
 import path from 'path';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
 export default function genConfig(_, options) {
     const NODE_ENV = (options.mode || process.env.NODE_ENV || 'production').trim(),
@@ -10,7 +10,7 @@ export default function genConfig(_, options) {
     
     const webpackConfig = {
         entry: {
-            index: './src/index.ts'
+            index: './src/index.ts',
         },
         
         output: {
@@ -22,29 +22,42 @@ export default function genConfig(_, options) {
 
         optimization: {
             minimize: isProd,
+            minimizer: [
+                new TerserPlugin({
+                    include: /\.min\.js$/,
+                    sourceMap: true,
+                    terserOptions: {
+                        compress: {
+                            unsafe: true,
+                            unused: true
+                        },
+                        keep_classnames: /^(ReactifyMarkdown|ReactRenderer(Plugin)?)$/,
+                        mangle: true,
+                        ecma: 6,
+                    }
+                })
+            ]
         },
 
-        devtool: "source-map",
+        devtool: isProd ? 'source-map' : 'eval',
 
         resolve: {
-            extensions: [ '.ts', '.tsx', '.js', '.json' ],
+            extensions: [ '.ts', '.tsx', '.js' ],
             alias: {
                 react: path.resolve('./node_modules/react'),
-                'markdown-it': path.resolve('./node_modules/markdown-it')
+                'markdown-it': path.resolve('./node_modules/markdown-it'),
+                'markdown-it/lib/index': path.resolve('./node_modules/markdown-it/lib/index.js'),
+                'markdown-it/lib/token': path.resolve('./node_modules/markdown-it/lib/token.js'),
+                'markdown-it/lib/common/utils': path.resolve('./node_modules/markdown-it/lib/common/utils'),
             }
         },
         
         module: {
             rules: [
                 {
-                    test: /\.jsx?$/,
-                    exclude: /node_modules|__tests__/,
-                    loader: 'babel-loader'
-                },
-                {
                     test: /\.tsx?$/,
                     exclude: /node_modules|__tests__/,
-                    loader: 'ts-loader'
+                    loader: 'awesome-typescript-loader'
                 },
                 {
                     enforce: 'pre', 

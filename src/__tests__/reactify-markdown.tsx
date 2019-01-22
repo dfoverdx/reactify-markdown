@@ -44,3 +44,16 @@ test('It doesn\'t strip whitespace when it\'s set not to', () => {
     const component = shallow(<ReactifyMarkdown dontStripIndent>{md}</ReactifyMarkdown>);
     expect(component).toMatchSnapshot();
 });
+
+test('It properly handles new-lines.', () => {
+    const md = `
+    This is a paragraph.
+    It does not have a newline.
+
+    This is a paragraph.  
+    It does have a newline.
+    `;
+
+    const component = shallow(<ReactifyMarkdown>{md}</ReactifyMarkdown>);
+    expect(component).toMatchSnapshot();
+})
