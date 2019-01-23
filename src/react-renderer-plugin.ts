@@ -6,5 +6,6 @@ import ReactRenderer from './react-renderer';
  * @param md MarkdownIt instance.
  */
 export default function RenderReactPlugin(md: MarkdownIt): void {
-    (md as any).renderer = new ReactRenderer();
+    const currentRenderer = (md as any).renderer;
+    (md as any).renderer = new ReactRenderer(currentRenderer.rules);
 }

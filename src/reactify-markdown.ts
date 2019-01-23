@@ -1,82 +1,39 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import MD from 'markdown-it';
-import { Options } from 'markdown-it/lib/index';
 import stripIndent from 'strip-indent';
 import RenderReactPlugin from './react-renderer-plugin';
-import { Plugin } from './types';
-
-interface BaseProps {
-    /**
-     * The markdown source string to be parsed and rendered.
-     */
-    children: string;
-
-    /**
-     * Optional rule name or list of rule names to enable.
-     */
-    enable?: string | string[];
-    
-    /**
-     * Optional rule name or list of rule names to disable.
-     */
-    disable?: string | string[];
-
-    /**
-     * Environment context.  Gets passed when evaluating rules, which may be helpful for rendering React components.
-     */
-    env: any;
-
-    /**
-     * By default, the component will strip preceding spaces via `strip-indent`.  Set this flag to disable this 
-     * behavior.
-     * 
-     * @see https://github.com/sindresorhus/strip-indent
-     */
-    dontStripIndent: boolean;
-}
-
-export interface MdProps extends BaseProps {
-    /**
-     * The pre-configured `MarkdownIt` instance.
-     */
-    md: MD;
-}
-
-export interface OptionsProps extends BaseProps {
-    /**
-     * Options passed to the `MarkdownIt` constructor.
-     * 
-     * @see https://markdown-it.github.io/markdown-it/#MarkdownIt.new
-     */
-    options?: Options;
-
-    /**
-     * List of plugins to apply to the `MarkdownIt` instance.
-     * 
-     * @warning Any plugin which overwrites the instance's renderer directly will cause an error.
-     */
-    plugins?: Plugin[] | Plugin;
-
-    /**
-     * The preset name to use.
-     * 
-     * @default `"default"`
-     * @see https://markdown-it.github.io/markdown-it/#MarkdownIt.new
-     */
-    presetName: 'commonmark' | 'zero' | 'default';
-}
+import { MarkdownItPresetName, ReactifyMarkdownProps as Props } from './types';
 
 interface State {
     md: MD;
 }
 
-function isMdProps(props: BaseProps): props is MdProps {
-    return !!(props as MdProps).md;
+function isMdProps(props: Props<'md'> | Props<'options'>): props is Props<'md'> {
+    return !!props.md;
 }
 
-export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> extends PureComponent<TProps, State> {
+export default class ReactifyMarkdown<
+    TProps extends Props<'md'> | Props<'options'>
+> extends PureComponent<TProps, State> {
     constructor(props: TProps) {
         super(props);
+
+        // this won't compile in typescript unless the user has changed ReactifyMarkdown.defaultProps
+        if (props.md && (
+            props.options || props.plugins || props.enable || props.disable || 
+            props.presetName && props.presetName !== ReactifyMarkdown.defaultProps.presetName
+        )) {
+            if (ReactifyMarkdown.defaultProps.md) {
+                console.warn(
+                    `${ReactifyMarkdown.name}.defaultProps.md is defined, while this instance of ` + 
+                    `${ReactifyMarkdown.name} has properties 'options', 'plugins', 'enable', 'disable', and/or ` +
+                    `'presetName' defined.  The other properties are ignored.`);
+            } else {
+                console.warn(`${ReactifyMarkdown.name} has both 'md' and 'options', 'plugins', 'enable', 'disable', ` +
+                    `and/or 'presetName' defined.  The other properties are ignored.`);
+            }
+        }
+
         this.state = this.generateState(props);
     }
 
@@ -91,8 +48,8 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
                 this.setState(this.generateState(nextProps));
             }
         } else {
-            let props = this.props as unknown as OptionsProps,
-                nProps = nextProps as OptionsProps,
+            let props = this.props,
+                nProps = nextProps,
                 plugins = props.plugins || [],
                 nPlugins = nProps.plugins || [],
                 pluginsChanged = plugins.length !== nPlugins.length;
@@ -113,7 +70,7 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
             }
 
             // otherwise, modify the md instance before rerendering
-            if (JSON.stringify((nextProps as OptionsProps).options) !== JSON.stringify(props.options)) {
+            if (JSON.stringify(nextProps.options) !== JSON.stringify(props.options)) {
                 (this.state.md as any).configure(nextProps);
             }
 
@@ -122,33 +79,33 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
                 return;
             }
 
-            let dis = new Set(props.disable),
-                nDis = new Set(nextProps.disable),
-                en = new Set(props.enable),
-                nEn = new Set(nextProps.enable),
+            let enable = new Set(props.enable),
+                nextEnable = new Set(nextProps.enable),
                 toEnable = new Set<string>(),
+                disable = new Set(props.disable),
+                nextDisable = new Set(nextProps.disable),
                 toDisable = new Set<string>();
             
-            for (let val of dis) {
-                if (!nDis.has(val)) {
+            for (const val of disable) {
+                if (!nextDisable.has(val)) {
                     toEnable.add(val);
                 }
             }
 
-            for (let val of nDis) {
-                if (!dis.has(val)) {
+            for (const val of nextDisable) {
+                if (!disable.has(val)) {
                     toDisable.add(val);
                 }
             }
 
-            for (let val of en) {
-                if (!nEn.has(val)) {
+            for (const val of enable) {
+                if (!nextEnable.has(val)) {
                     toDisable.add(val);
                 }
             }
 
-            for (let val of nEn) {
-                if (!en.has(val)) {
+            for (const val of nextEnable) {
+                if (!enable.has(val)) {
                     toEnable.add(val);
                 }
             }
@@ -169,7 +126,7 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
                     options,
                     presetName,
                     plugins
-                } = props as OptionsProps,
+                } = props as Props<'options'>,
                 state: State,
                 md = new MD(presetName, options);
 
@@ -206,9 +163,12 @@ export default class ReactifyMarkdown<TProps extends MdProps | OptionsProps> ext
         return this.state.md.render(source, this.props.env);
     }
 
-    static defaultProps: Partial<MdProps & OptionsProps> = {
+    static defaultProps: 
+            Partial<Props<'options'> | Omit<Props<'md'>, 'presetName'>> & { presetName: MarkdownItPresetName } = {
         presetName: 'default',
         env: {},
-        dontStripIndent: false
+        dontStripIndent: false,
     };
 }
+
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

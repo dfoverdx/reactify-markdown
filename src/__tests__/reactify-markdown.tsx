@@ -1,12 +1,17 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, shallow } from 'enzyme';
+import MD from 'markdown-it';
 import mdiRegex from 'markdown-it-regex';
 import ReactifyMarkdown from '../reactify-markdown';
 import { Plugin } from '../types';
 
-jest.mock('shortid');
+const customPlugins: Plugin[] = [[mdiRegex, {
+    name: 'test',
+    regex: /:(\w+):/,
+    replace: (m: string) => <i>{m}</i>,
+}]];
 
-test('It handles some basic rules', () => {
+it('handles some basic rules', () => {
     let component = shallow(<ReactifyMarkdown>{`
         Header 1
         ========
@@ -19,21 +24,15 @@ test('It handles some basic rules', () => {
     expect(component).toMatchSnapshot();
 });
 
-test('It handles custom rules', () => {
-    let plugins: Plugin[] = [[mdiRegex, {
-            name: 'test',
-            regex: /:(\w+):/,
-            replace: (m: string) => <i>{m}</i>,
-        }]];
-
-    let component = shallow(<ReactifyMarkdown plugins={plugins}>{`
+it('handles custom rules', () => {
+    let component = shallow(<ReactifyMarkdown plugins={customPlugins}>{`
         Hay :needle: stack
     `}</ReactifyMarkdown>);
 
     expect(component).toMatchSnapshot();
-})
+});
 
-test('It doesn\'t strip whitespace when it\'s set not to', () => {
+it('doesn\'t strip whitespace when it\'s set not to', () => {
     const md = `
     Header 1
     ========
@@ -45,7 +44,7 @@ test('It doesn\'t strip whitespace when it\'s set not to', () => {
     expect(component).toMatchSnapshot();
 });
 
-test('It properly handles new-lines.', () => {
+it('properly handles new-lines', () => {
     const md = `
     This is a paragraph.
     It does not have a newline.
@@ -56,4 +55,72 @@ test('It properly handles new-lines.', () => {
 
     const component = shallow(<ReactifyMarkdown>{md}</ReactifyMarkdown>);
     expect(component).toMatchSnapshot();
-})
+});
+
+it('handles passing an instance of markdown-it to props', () => {
+    const md = new MD();
+    
+    for (const plugin of customPlugins) {
+        const [p, ...options] = plugin;
+        md.use(p, ...options);
+    }
+
+    let component = shallow(<ReactifyMarkdown md={md}>{`
+            Hay :needle: stack
+        `}</ReactifyMarkdown>);
+    expect(component).toMatchSnapshot();
+});
+
+it('uses props specified by overwriting ReactifyMarkdown.defaultProps', () => {
+    const defaultProps = ReactifyMarkdown.defaultProps,
+        warn = console.warn;
+    try {
+        console.warn = jest.fn();
+
+        ReactifyMarkdown.defaultProps = Object.assign({ plugins: customPlugins }, ReactifyMarkdown.defaultProps);
+        let component = render(<ReactifyMarkdown>{`
+                Hay :needle: stack
+            `}</ReactifyMarkdown>);
+
+        expect(component).toMatchSnapshot();
+        expect(console.warn).not.toHaveBeenCalled();
+        (console.warn as jest.Mock).mockReset();
+
+        const md = new MD();
+        md.use(mdiRegex, {
+            name: 'test',
+            regex: /:(\w+):/,
+            replace: (m: string) => <em>{m}</em>,
+        });
+
+        ReactifyMarkdown.defaultProps.md = md;
+
+        component = render(<ReactifyMarkdown>{`
+                Hay :needle: stack
+            `}</ReactifyMarkdown>);
+
+        expect(component).toMatchSnapshot();
+        expect(console.warn).toHaveBeenCalled();
+        (console.warn as jest.Mock).mockReset();
+
+        delete ReactifyMarkdown.defaultProps.plugins;
+
+        component = render(<ReactifyMarkdown>{`
+                Hay :needle: stack
+            `}</ReactifyMarkdown>);
+
+        expect(component).toMatchSnapshot();
+        expect(console.warn).not.toHaveBeenCalled();
+        (console.warn as jest.Mock).mockReset();
+
+        component = render(<ReactifyMarkdown plugins={customPlugins}>{`
+                Hay :needle: stack
+            `}</ReactifyMarkdown>);
+
+        expect(component).toMatchSnapshot();
+        expect(console.warn).toHaveBeenCalled();
+    } finally {
+        ReactifyMarkdown.defaultProps = defaultProps;
+        console.warn = warn;
+    }
+});

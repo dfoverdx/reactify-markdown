@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`It doesn't strip whitespace when it's set not to 1`] = `
+exports[`doesn't strip whitespace when it's set not to 1`] = `
 <pre
   key="0"
 >
@@ -14,7 +14,7 @@ A paragraph starts here.  *This is italicized.*
 </pre>
 `;
 
-exports[`It handles custom rules 1`] = `
+exports[`handles custom rules 1`] = `
 <p
   key="0"
 >
@@ -28,7 +28,21 @@ exports[`It handles custom rules 1`] = `
 </p>
 `;
 
-exports[`It handles some basic rules 1`] = `
+exports[`handles passing an instance of markdown-it to props 1`] = `
+<p
+  key="0"
+>
+  Hay 
+  <i
+    key="1"
+  >
+    needle
+  </i>
+   stack
+</p>
+`;
+
+exports[`handles some basic rules 1`] = `
 Array [
   <h1
     key="0"
@@ -56,7 +70,7 @@ Array [
 ]
 `;
 
-exports[`It properly handles new-lines. 1`] = `
+exports[`properly handles new-lines 1`] = `
 Array [
   <p
     key="0"
@@ -76,4 +90,44 @@ Array [
     It does have a newline.
   </p>,
 ]
+`;
+
+exports[`uses props specified by overwriting ReactifyMarkdown.defaultProps 1`] = `
+<p>
+  Hay 
+  <i>
+    needle
+  </i>
+   stack
+</p>
+`;
+
+exports[`uses props specified by overwriting ReactifyMarkdown.defaultProps 2`] = `
+<p>
+  Hay 
+  <em>
+    needle
+  </em>
+   stack
+</p>
+`;
+
+exports[`uses props specified by overwriting ReactifyMarkdown.defaultProps 3`] = `
+<p>
+  Hay 
+  <em>
+    needle
+  </em>
+   stack
+</p>
+`;
+
+exports[`uses props specified by overwriting ReactifyMarkdown.defaultProps 4`] = `
+<p>
+  Hay 
+  <em>
+    needle
+  </em>
+   stack
+</p>
 `;

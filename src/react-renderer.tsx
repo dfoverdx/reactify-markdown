@@ -7,8 +7,8 @@ import { Token, TokenRender } from './types';
  * Renderer that renders the converted source as React elements rather than an HTML string.
  */
 export default class ReactRenderer {
-    constructor() {
-        this.rules = Object.assign({}, default_rules);
+    constructor(prevRules?: object) {
+        this.rules = Object.assign({}, prevRules, default_rules);
     }
 
     /**

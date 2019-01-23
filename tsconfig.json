@@ -16,7 +16,8 @@
         "downlevelIteration": true,
         "sourceMap": true,
         "declaration": true,
-        "declarationDir": "./types"
+        "declarationDir": "./types",
+        "resolveJsonModule": true,
     },
     "include": [
         "./src/**/*.ts",

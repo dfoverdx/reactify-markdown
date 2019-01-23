@@ -4,7 +4,7 @@ import { Token, TokenRender } from './types';
  * Renderer that renders the converted source as React elements rather than an HTML string.
  */
 export default class ReactRenderer {
-    constructor();
+    constructor(prevRules?: object);
     /**
      * Rules to use when parsing and rendering a source string.
      */
