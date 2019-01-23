@@ -24,7 +24,7 @@ export default function genConfig(_, options) {
             minimize: isProd,
             minimizer: [
                 new TerserPlugin({
-                    include: /\.min\.js$/,
+                    include: /\.js$/,
                     sourceMap: true,
                     terserOptions: {
                         compress: {
