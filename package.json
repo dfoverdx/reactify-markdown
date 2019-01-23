@@ -14,7 +14,7 @@
     "build:dev": "npx cross-env NODE_ENV=development webpack --mode development",
     "build:watch": "nodemon -w webpack.config.babel.js ./node_modules/webpack/bin/webpack.js --mode production --watch",
     "test": "jest",
-    "deploy": "npm version minor && npm run build:prod && npm publish"
+    "deploy": "npm version patch && npm run build:prod && npm publish"
   },
   "keywords": [
     "React",
