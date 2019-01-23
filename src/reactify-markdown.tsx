@@ -35,14 +35,14 @@ interface BaseProps {
     dontStripIndent: boolean;
 }
 
-interface MdProps extends BaseProps {
+export interface MdProps extends BaseProps {
     /**
      * The pre-configured `MarkdownIt` instance.
      */
     md: MD;
 }
 
-interface OptionsProps extends BaseProps {
+export interface OptionsProps extends BaseProps {
     /**
      * Options passed to the `MarkdownIt` constructor.
      * 
