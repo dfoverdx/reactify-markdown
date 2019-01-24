@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Token, TokenRender } from './types';
+import { RenderedToken, Token, TokenRender } from './types';
 /**
  * Renderer that renders the converted source as React elements rather than an HTML string.
  */
@@ -16,9 +16,22 @@ export default class ReactRenderer {
      *
      * @param tokens Token stream to be rendered as React elements.
      * @param options Options passed to Renderer rules.
-     * @param env Environment passed to Renderee rules.
+     * @param env Environment passed to Renderer rules.
      */
     render(tokens: Token[], options: any, env: any): ReactNode;
+    /**
+     * Renders the token and the specified index within the token stream as a ReactNode.
+     *
+     * @param tokens Token stream to be rendered as React elements.
+     * @param idx Index of token within tokens stream.
+     * @param options Options passed to Renderer rules.
+     * @param env Environment passed to Renderer rules.
+     */
+    renderToken(tokens: Token[], idx: number, options: any, env: any): RenderedToken;
+    /**
+     * No-Op.
+     */
+    renderAttrs(_: Token): void;
     /**
      * Does the woek of rendering.  Is in a separate function from `render` so that we can include the `idx` argument.
      *

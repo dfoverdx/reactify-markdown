@@ -27,7 +27,12 @@ export interface Token extends Omit<MDIToken, 'content'> {
  * 
  * @see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#rules
  */
-export type TokenRender = (tokens: Token[], idx: number, options: any, env: any, self: ReactRenderer) => ReactNode;
+export type TokenRender = (tokens: Token[], idx: number, options: any, env: any, self: ReactRenderer) => 
+    ReactNode | RenderedToken;
+
+export class RenderedToken {
+    constructor(public node: ReactNode, public endIdx: number) {}
+}
 
 /**
  * Key-value pairs of `TokenRender` rules.

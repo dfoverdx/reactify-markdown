@@ -14,6 +14,24 @@ A paragraph starts here.  *This is italicized.*
 </pre>
 `;
 
+exports[`handles cases where a plugin calls \`renderToken\` 1`] = `
+<p
+  key="0"
+>
+  <u
+    key="0"
+  >
+    This is underlined.
+  </u>
+    This is not.  
+  <u
+    key="4"
+  >
+    This is underlined, too.
+  </u>
+</p>
+`;
+
 exports[`handles custom rules 1`] = `
 <p
   key="0"

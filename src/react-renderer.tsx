@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import default_rules from './default-rules';
 import { getAttrs } from './helpers';
-import { Token, TokenRender } from './types';
+import { RenderedToken, Token, TokenRender } from './types';
 
 /**
  * Renderer that renders the converted source as React elements rather than an HTML string.
@@ -23,10 +23,44 @@ export default class ReactRenderer {
      * 
      * @param tokens Token stream to be rendered as React elements.
      * @param options Options passed to Renderer rules.
-     * @param env Environment passed to Renderee rules.
+     * @param env Environment passed to Renderer rules.
      */
     render(tokens: Token[], options: any, env: any): ReactNode {
         return this.renderInner(tokens, 0, options, env)[0];
+    }
+
+    /**
+     * Renders the token and the specified index within the token stream as a ReactNode.
+     * 
+     * @param tokens Token stream to be rendered as React elements.
+     * @param idx Index of token within tokens stream.
+     * @param options Options passed to Renderer rules.
+     * @param env Environment passed to Renderer rules.
+     */
+    renderToken(tokens: Token[], idx: number, options: any, env: any): RenderedToken {
+        let token = tokens[idx];
+        if (token.nesting === 1) {
+            // opening tag which may or may not be followed by children
+            let Tag = token.tag,
+                [n, endIdx] = this.renderInner(tokens, idx + 1, options, env);
+            
+            return new RenderedToken(<Tag key={idx} {...getAttrs(token)}>{n}</Tag>, endIdx);
+        } else if (token.nesting === 0) {
+            // singleton tag, e.g. <img />
+            let Tag = token.tag;
+            return new RenderedToken(<Tag key={idx} {...getAttrs(token)} />, idx);
+        } else {
+            // closing tag -- return at this point as it's either the last token in the stream, or it's the final
+            // action of a recursive call
+            return new RenderedToken(undefined, idx);
+        }
+    }
+
+    /**
+     * No-Op.
+     */
+    renderAttrs(_: Token): void {
+        console.warn('Rendering of attributes is handled by the ReactRenderer.  renderAttrs() is a no-op.');
     }
 
     /**
@@ -46,10 +80,18 @@ export default class ReactRenderer {
             let token = tokens[i],
                 type = token.type;
 
-            if (type === 'inline') {
+            if (token.nesting === -1) {
+                // closing tag
+                return [nodes, i];
+            } else if (type === 'inline') {
                 addNodeToArray(nodes, this.render(token.children, options, env));
             } else if (rules[type] !== undefined) {
                 let n = rules[type](tokens, i, options, env, this);
+                if (n instanceof RenderedToken) {
+                    i = n.endIdx;
+                    n = n.node;
+                }
+
                 addNodeToArray(nodes, n);
             } else if (token.hidden) {
                 continue;
@@ -65,8 +107,7 @@ export default class ReactRenderer {
                 let Tag = token.tag;
                 addNodeToArray(nodes, <Tag key={i} {...getAttrs(token)} />);
             } else {
-                // closing tag -- return at this point as it's either the last token in the stream, or it's the final
-                // action of a recursive call
+                // the last token in the stream, or it's the final action of a recursive call
                 return [nodes, i];
             }
         }

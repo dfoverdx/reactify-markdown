@@ -63,6 +63,7 @@
     "jest": "^23.6.0",
     "markdown-it": "^8.4.2",
     "markdown-it-regex": "^0.2.0",
+    "markdown-it-underline": "1.0.1",
     "nodemon": "^1.18.9",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

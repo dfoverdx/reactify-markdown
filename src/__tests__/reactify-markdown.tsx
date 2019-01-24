@@ -2,6 +2,7 @@ import React from 'react';
 import { render, shallow } from 'enzyme';
 import MD from 'markdown-it';
 import mdiRegex from 'markdown-it-regex';
+import MarkdownItUnderline from 'markdown-it-underline';
 import ReactifyMarkdown from '../reactify-markdown';
 import { Plugin } from '../types';
 
@@ -123,4 +124,12 @@ it('uses props specified by overwriting ReactifyMarkdown.defaultProps', () => {
         ReactifyMarkdown.defaultProps = defaultProps;
         console.warn = warn;
     }
+});
+
+it('handles cases where a plugin calls `renderToken`', () => {
+    let component = shallow(<ReactifyMarkdown plugins={MarkdownItUnderline}>{`
+            _This is underlined._  This is not.  _This is underlined, too._
+        `}</ReactifyMarkdown>);
+
+    expect(component).toMatchSnapshot();
 });
