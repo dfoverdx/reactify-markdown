@@ -85,6 +85,17 @@ Array [
 
     </code>
   </pre>,
+  <p
+    key="7"
+  >
+    Check that 
+    <img
+      alt="image"
+      key="1"
+      src="https://i.imgur.com/cN12sFp.png"
+    />
+     is inline
+  </p>,
 ]
 `;
 

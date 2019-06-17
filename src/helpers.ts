@@ -12,6 +12,10 @@ export function getAttrs(token: Token): { [key: string]: string } {
 
     let obj: { [key: string]: string } = {};
     for (let [attr, val] of token.attrs) {
+        if (attr === 'class') {
+            attr = 'className';
+        }
+        
         obj[attr] = val;
     }
 

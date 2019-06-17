@@ -42,4 +42,5 @@ export default class ReactRenderer {
      * @param env Environement passed to the Renderer instance.
      */
     private renderInner;
+    renderInlineAsText(tokens: Token[], options: any, env: any): string;
 }

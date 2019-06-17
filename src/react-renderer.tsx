@@ -43,7 +43,7 @@ export default class ReactRenderer {
             // opening tag which may or may not be followed by children
             let Tag = token.tag,
                 [n, endIdx] = this.renderInner(tokens, idx + 1, options, env);
-            
+
             return new RenderedToken(<Tag key={idx} {...getAttrs(token)}>{n}</Tag>, endIdx);
         } else if (token.nesting === 0) {
             // singleton tag, e.g. <img />
@@ -99,7 +99,7 @@ export default class ReactRenderer {
                 // opening tag which may or may not be followed by children
                 let Tag = token.tag,
                     [n, j] = this.renderInner(tokens, i + 1, options, env);
-                
+
                 addNodeToArray(nodes, <Tag key={i} {...getAttrs(token)}>{n}</Tag>);
                 i = j;
             } else if (token.nesting === 0) {
@@ -113,6 +113,20 @@ export default class ReactRenderer {
         }
 
         return [nodes, tokens.length];
+    }
+
+    renderInlineAsText(tokens: Token[], options: any, env: any) {
+        let result = '';
+
+        for (var i = 0, len = tokens.length; i < len; i++) {
+            if (tokens[i].type === 'text') {
+                result += tokens[i].content;
+            } else if (tokens[i].type === 'image') {
+                result += this.renderInlineAsText(tokens[i].children, options, env);
+            }
+        }
+
+        return result;
     }
 }
 
@@ -143,5 +157,5 @@ function addNodeToArray(array: ReactNode[], node: ReactNode): void {
         }
     } else {
         array.push(node);
-    } 
+    }
 }

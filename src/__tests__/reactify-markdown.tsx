@@ -20,6 +20,8 @@ it('handles some basic rules', () => {
         A paragraph starts here.  *This is italicized.*
 
             This is a code block.
+
+        Check that ![image](https://i.imgur.com/cN12sFp.png) is inline
     `}</ReactifyMarkdown>);
 
     expect(component).toMatchSnapshot();
@@ -133,3 +135,27 @@ it('handles cases where a plugin calls `renderToken`', () => {
 
     expect(component).toMatchSnapshot();
 });
+
+it('handles rendering the `class` prop as `className`', () => {
+    const plugin = function(md: MD) {
+        const regex = /:(\w+):/;
+        md.core.ruler.push('test-className', (state) => {
+            for (let i = 0; i < state.tokens.length; i++) {
+                if (state.tokens[i].type !== 'inline') {
+                    continue;
+                }
+
+                let tokens = state.tokens[i].children;
+                for (let j = tokens.length - 1; j >= 0; j--) {
+                    let token = tokens[j];
+                    if (token.type === 'text' && regex.test(token.content)) {
+                        
+                    }
+                }
+            }
+        })
+        md.renderer.rules['test-className'] = (tokens, idx) => {
+            tokens[idx].attrPush(['class', 'test']);
+        }
+    }
+})
