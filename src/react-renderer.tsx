@@ -20,7 +20,7 @@ export default class ReactRenderer {
 
     /**
      * Renders the passed token stream as React elements.
-     * 
+     *
      * @param tokens Token stream to be rendered as React elements.
      * @param options Options passed to Renderer rules.
      * @param env Environment passed to Renderer rules.
@@ -31,7 +31,7 @@ export default class ReactRenderer {
 
     /**
      * Renders the token and the specified index within the token stream as a ReactNode.
-     * 
+     *
      * @param tokens Token stream to be rendered as React elements.
      * @param idx Index of token within tokens stream.
      * @param options Options passed to Renderer rules.
@@ -41,7 +41,7 @@ export default class ReactRenderer {
         let token = tokens[idx];
         if (token.nesting === 1) {
             // opening tag which may or may not be followed by children
-            let Tag = token.tag,
+            let Tag = token.tag as any,
                 [n, endIdx] = this.renderInner(tokens, idx + 1, options, env);
 
             return new RenderedToken(<Tag key={idx} {...getAttrs(token)}>{n}</Tag>, endIdx);
@@ -65,7 +65,7 @@ export default class ReactRenderer {
 
     /**
      * Does the woek of rendering.  Is in a separate function from `render` so that we can include the `idx` argument.
-     * 
+     *
      * @param tokens The token stream produced by the parser.
      * @param idx The index of the starting token to be rendered.  Is `0` when called by `render`, and greater when
      * being called recursively.
@@ -97,7 +97,7 @@ export default class ReactRenderer {
                 continue;
             } else if (token.nesting === 1) {
                 // opening tag which may or may not be followed by children
-                let Tag = token.tag,
+                let Tag = token.tag as any,
                     [n, j] = this.renderInner(tokens, i + 1, options, env);
 
                 addNodeToArray(nodes, <Tag key={i} {...getAttrs(token)}>{n}</Tag>);
@@ -133,7 +133,7 @@ export default class ReactRenderer {
 /**
  * Intelligently appends `node` to `array`.  `ReactNode` may be an array of `ReactNode`s, so this helper function exists
  * to be called recursively, where `Array<ReactNode>.push` could not.
- * 
+ *
  * @param array The array to which the node should be appended.
  * @param node The `ReactNode` to be appended.
  */
